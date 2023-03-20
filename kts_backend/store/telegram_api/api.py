@@ -1,25 +1,28 @@
-from typing import Optional
-
 import aiohttp
-
-from kts_backend.store.tg_api.telegram.dataclasses import (
+from typing import Optional
+from kts_backend.store.telegram_api.dataclasses import (
     GetUpdatesResponse,
     SendMessageResponse,
 )
 
 
-class TelegramClient:
+class TgClient:
     def __init__(self, token: str = ""):
         self.token = token
 
     def get_url(self, method: str):
         return f"https://api.telegram.org/bot{self.token}/{method}"
 
-    async def get_me(self) -> dict:
-        url = self.get_url("getMe")
+    async def get_chat_member(self, group_id, user_id) -> dict:
+        # TODO this is a stub, because TG dont have a method for get member in group
+        url = self.get_url("getChatMember")
+        payload = {
+            "group_id": group_id,
+        }
         async with aiohttp.ClientSession() as session:
-            async with session.get(url) as resp:
-                return await resp.json()
+            async with session.post(url, json=payload) as resp:
+                res_dict = await resp.json()
+                return res_dict
 
     async def get_updates(
         self, offset: Optional[int] = None, timeout: int = 0

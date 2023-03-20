@@ -1,8 +1,8 @@
-"""add initial tables
+"""create player score game model
 
-Revision ID: 484edeeeb087
+Revision ID: 938bec2815ae
 Revises: 
-Create Date: 2023-03-19 14:31:47.954930
+Create Date: 2023-03-20 18:51:41.864722
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '484edeeeb087'
+revision = '938bec2815ae'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -25,13 +25,18 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('players',
+    sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('tg_id', sa.Integer(), nullable=False),
     sa.Column('username', sa.VARCHAR(), nullable=False),
-    sa.PrimaryKeyConstraint('tg_id')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('score',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('points', sa.Integer(), nullable=False),
+    sa.Column('game_id', sa.Integer(), nullable=True),
+    sa.Column('player_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['game_id'], ['games.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['player_id'], ['players.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###

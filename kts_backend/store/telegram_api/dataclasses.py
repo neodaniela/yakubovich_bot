@@ -1,8 +1,8 @@
 from dataclasses import field
 from typing import ClassVar, Type, List, Optional
 
-from marshmallow import Schema, EXCLUDE
 from marshmallow_dataclass import dataclass
+from marshmallow import Schema, EXCLUDE
 
 
 @dataclass
@@ -53,7 +53,6 @@ class UpdateObj:
 class GetUpdatesResponse:
     ok: bool
     result: List[UpdateObj]
-
     Schema: ClassVar[Type[Schema]] = Schema
 
     class Meta:
@@ -64,7 +63,6 @@ class GetUpdatesResponse:
 class SendMessageResponse:
     ok: bool
     result: Message
-
     Schema: ClassVar[Type[Schema]] = Schema
 
     class Meta:
