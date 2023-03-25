@@ -5,6 +5,6 @@ __all__ = ("register_urls",)
 
 
 def register_urls(application: Application, cors: CorsConfig):
-    import kts_backend.users.urls
+    import kts_backend.game.urls
 
     kts_backend.users.urls.register_urls(application, cors)
