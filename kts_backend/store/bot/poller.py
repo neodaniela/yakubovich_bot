@@ -15,8 +15,10 @@ class Poller:
             res = await self.tg_client.get_updates_in_objects(
                 offset=offset, timeout=30
             )
+            print(res, 'RESSS')
             for u in res.result:
                 offset = u.update_id + 1
+                print(u, 'UPDATES')
                 await self.tg_client.send_message(
                     u.message.chat.id, u.message.text
                 )

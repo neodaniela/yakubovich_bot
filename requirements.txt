@@ -18,3 +18,4 @@ SQLAlchemy==1.4.40
 
 alembic==1.9.2
 asyncpg==0.24.0
+cryptography==37.0.4

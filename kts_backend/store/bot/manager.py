@@ -1,6 +1,5 @@
 import typing
 from kts_backend.base.base_accessor import BaseAccessor
-from logging import getLogger
 from kts_backend.store.bot.poller import Poller
 
 if typing.TYPE_CHECKING:
