@@ -2,10 +2,17 @@ from kts_backend.quiz.schemes import (
     QuestionSchema,
     QuestionListSchema,
     GameSchema,
-    GameGetSchema, PlayerAddSchema, PlayerSchema,
+    GameGetSchema,
+    PlayerAddSchema,
+    PlayerSchema,
 )
 from kts_backend.web.app import View
-from aiohttp_apispec import docs, request_schema, response_schema, querystring_schema
+from aiohttp_apispec import (
+    docs,
+    request_schema,
+    response_schema,
+    querystring_schema,
+)
 
 from kts_backend.web.mixins import AuthRequiredMixin
 from kts_backend.web.utils import json_response
@@ -72,6 +79,10 @@ class PlayerAddView(View):
         player_firstname = self.data["player_firstname"]
         player_secondname = self.data["player_secondname"]
         player = await self.store.quizzes.add_player(
-            game_id, player_id, player_username, player_firstname, player_secondname
+            game_id,
+            player_id,
+            player_username,
+            player_firstname,
+            player_secondname,
         )
         return json_response(data={"player": PlayerSchema().dump(player)})

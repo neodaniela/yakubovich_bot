@@ -25,6 +25,6 @@ database:
   database: kts_final
 
 telegram_bot:
-  token: 5681872559:AAHCdrgJVnNJW2PKjF4eApmk8ik-hPg3Iwc
-  name: familyLifeGuardBot
-  url: t.me/familyLifeGuardBot
+  token: 6197319595:AAEz5alCTy3CqBHeMfXpzWbDKOrzq_JYsWg
+  name: Якубович
+  username: leonid_yakubovich_bot

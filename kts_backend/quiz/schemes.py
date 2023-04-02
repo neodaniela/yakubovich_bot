@@ -15,6 +15,7 @@ class GameSchema(Schema):
     id = fields.Int(required=False)
     created_at = fields.DateTime(required=False)
     chat_id = fields.Int(required=True)
+    is_active = fields.Bool(required=False)
     question_id = fields.Int(required=True)
     creator_id = fields.Int(required=False)
     players = fields.Nested("PlayerSchema", many=True, required=False)
