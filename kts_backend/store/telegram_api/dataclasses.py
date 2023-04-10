@@ -8,6 +8,7 @@ from marshmallow import Schema, EXCLUDE
 @dataclass
 class MessageFrom:
     id: int
+    is_bot: bool
     first_name: str
     last_name: Optional[str]
     username: Optional[str]
@@ -28,6 +29,14 @@ class Chat:
     class Meta:
         unknown = EXCLUDE
 
+@dataclass
+class LeftChatMember:
+    id: int
+    username: str
+
+    class Meta:
+        unknown = EXCLUDE
+
 
 @dataclass
 class Message:
@@ -35,6 +44,7 @@ class Message:
     from_: MessageFrom = field(metadata={"data_key": "from"})
     chat: Chat
     text: Optional[str] = None
+    left_chat_member: Optional["LeftChatMember"] = None
 
     class Meta:
         unknown = EXCLUDE

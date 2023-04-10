@@ -62,7 +62,7 @@ class GameModel(db):
     chat_id = Column(BigInteger, nullable=False)
     is_active = Column(Boolean, default=True)
     question_id = Column(Integer, ForeignKey("questions.id"))
-    is_whole_word = Column(Boolean, default=False)
+    is_whole_word = Column(Boolean)
     pinned_message_id = Column(Integer)
     played_letters = Column(ARRAY(String), default=[])
     move = Column(Integer, default=0)

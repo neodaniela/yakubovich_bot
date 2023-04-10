@@ -87,10 +87,10 @@ class QuizAccessor(BaseAccessor):
             await session.execute(query)
             await session.commit()
 
-    async def get_game_stats(self) -> list[Game]:
+    async def get_game_stats(self, chat_id: int) -> list[Game]:
         async with self.app.database.session() as session:
             query = (
-                select(GameModel).order_by(GameModel.created_at.desc()).limit(5)
+                select(GameModel).where(GameModel.chat_id == chat_id).order_by(GameModel.created_at.desc()).limit(5)
             )
             result = await session.execute(query)
             raw_games = result.scalars().all()
@@ -107,7 +107,7 @@ class QuizAccessor(BaseAccessor):
             await session.execute(query)
             await session.commit()
 
-    async def is_whole_word_state(self, game_id: int, state: bool):
+    async def set_whole_word_state(self, game_id: int, state: bool or None):
         async with self.app.database.session() as session:
             query = (
                 update(GameModel).where(GameModel.id == game_id).values(is_whole_word=state)
