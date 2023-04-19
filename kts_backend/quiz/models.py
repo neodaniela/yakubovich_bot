@@ -90,7 +90,7 @@ class GameModel(db):
 class PlayerModel(db):
     __tablename__ = "players"
     tg_id = Column(BigInteger, nullable=False, primary_key=True)
-    username = Column(VARCHAR, nullable=False)
+    username = Column(VARCHAR)
     first_name = Column(VARCHAR, nullable=False)
     second_name = Column(VARCHAR)
     games = relationship("GameModel", secondary="link")

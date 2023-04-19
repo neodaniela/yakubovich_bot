@@ -108,9 +108,10 @@ class BotManager(BaseAccessor):
                         # и ругает игроков, если они пытаются отправлять что-то не в свой ход.
                         # эта ветка запускается для игрока, который ходит в свой ход
                         if await self.check_user_turn(
-                                game=game,
-                                chat_id=chat_id,
-                                username=username
+                            game=game,
+                            chat_id=chat_id,
+                            username=username,
+                            user_id=user_id
                         ):
                             await self.game_logic(
                                 game=game,
@@ -185,15 +186,16 @@ class BotManager(BaseAccessor):
             if callback_command == "/word":
                 # проверяется пермиссия игрока на выполнение данного действия
                 if await self.check_user_turn(
-                        game=game,
-                        chat_id=chat_id,
-                        username=username
+                    game=game,
+                    chat_id=chat_id,
+                    username=username,
+                    user_id=user_id
                 ):
                     await self.app.store.quizzes.set_whole_word_state(
                         game_id=game.id,
                         state=True
                     )
-                    text = text_msg + f"\n\n@{username} назовёт слово сразу!"
+                    text = text_msg + f"\n\n@{username or user_id} назовёт слово сразу!"
                     await self.tg_client.edit_message_text(
                         chat_id=chat_id,
                         message_id=message_id,
@@ -208,15 +210,16 @@ class BotManager(BaseAccessor):
             if callback_command == "/letter":
                 # проверяется пермиссия игрока на выполнение данного действия
                 if await self.check_user_turn(
-                        game=game,
-                        chat_id=chat_id,
-                        username=username
+                    game=game,
+                    chat_id=chat_id,
+                    username=username,
+                    user_id=user_id
                 ):
                     await self.app.store.quizzes.set_whole_word_state(
                         game_id=game.id,
                         state=False
                     )
-                    text = text_msg + f"\n\n@{username} будет отгадывать букву!"
+                    text = text_msg + f"\n\n@{username or user_id} будет отгадывать букву!"
                     await self.tg_client.edit_message_text(
                         chat_id=chat_id,
                         message_id=message_id,
@@ -310,7 +313,7 @@ class BotManager(BaseAccessor):
             )
 
             # редактируется сообщение, где агрегируется список участников
-            text = text_msg + f"\n➡️@{username}, {first_name}!"
+            text = text_msg + f"\n➡️@{username or user_id}, {first_name}!"
             inline_kb = self.add_players_keyboard(
                 game_id=game_id
             )
@@ -475,7 +478,7 @@ class BotManager(BaseAccessor):
         # проверяется флаг is_whole_word, который говорит о том,
         # собирается ли игрок угадать всё слово сразу
         if game.is_whole_word is None:
-            text = f"👎 @{username}, Вы не выбрали букву или слово"
+            text = f"👎 @{username or user_id}, Вы не выбрали букву или слово"
             message = await self.tg_client.send_message(
                 chat_id=chat_id,
                 text=text
@@ -529,7 +532,7 @@ class BotManager(BaseAccessor):
                 chat_id=chat_id,
                 sticker=STICKER_UVY_I_AKH
             )
-            text = f"🙈НЕПРАВИЛЬНО! @{username}, {first_name}, выбывает из игры!"
+            text = f"🙈НЕПРАВИЛЬНО! @{username or user_id}, {first_name}, выбывает из игры!"
             await self.tg_client.send_message(
                 chat_id=chat_id,
                 text=text
@@ -723,7 +726,7 @@ class BotManager(BaseAccessor):
                 "🎇Добрый вечер! Здравствуйте, уважаемые дамы и господа! В эфире капитал-шоу «Поле чудес»!\n"
                 "🎆И как обычно, под аплодисменты зрительного зала я приглашаю в студию игроков:\n"
                 "\n"
-                f"➡️@{username}, {first_name}!"
+                f"➡️@{username or user_id}, {first_name}!"
             )
 
             inline_kb = self.add_players_keyboard(
@@ -837,7 +840,7 @@ class BotManager(BaseAccessor):
 
     # функция проверяет обновление, чтобы понять, что его написал игрок, который сейчас ходит
     # если нет - то ничего не делает и просто выводит сообщение о недопустимости такого поведения
-    async def check_user_turn(self, game: Game, chat_id: int, username: str) -> bool:
+    async def check_user_turn(self, game: Game, chat_id: int, username: str, user_id: int) -> bool:
         players_count = await self.app.store.quizzes.get_player_amount(
             game.id
         )
@@ -845,7 +848,7 @@ class BotManager(BaseAccessor):
         active_player = game.players[active_player_num]
 
         if username != active_player.username:
-            text = f"🤚@{username}, тишина в студии! Не подсказываем! " \
+            text = f"🤚@{username or user_id}, тишина в студии! Не подсказываем! " \
                    f"Сейчас ходит @{active_player.username}."
             message = await self.tg_client.send_message(chat_id=chat_id, text=text)
             asyncio.create_task(self.delete_message_after_show(chat_id, message.result.message_id, 5))
@@ -854,7 +857,7 @@ class BotManager(BaseAccessor):
         return True
 
     async def set_winner(self, chat_id: int, game_id: int, user_id: int, username: str, first_name: str):
-        text = f"🔥🔥🔥@{username}, {first_name}, " \
+        text = f"🔥🔥🔥@{username or user_id}, {first_name}, " \
                f"Вы победитель!\n" \
                f"🔥🔥🔥Приз в студию!"
         await self.tg_client.send_message(
