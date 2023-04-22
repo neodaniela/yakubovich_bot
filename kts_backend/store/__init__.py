@@ -1,6 +1,5 @@
 import typing
 
-
 from kts_backend.store.database.database import Database
 
 if typing.TYPE_CHECKING:
@@ -8,11 +7,13 @@ if typing.TYPE_CHECKING:
 
 
 class Store:
-    def __init__(self, app: "Application", *args, **kwargs):
-        from kts_backend.game.accessor import GameAccessor
+    def __init__(self, app: "Application"):
+        from kts_backend.store.admin.accessor import AdminAccessor
+        from kts_backend.store.game.accessor import QuizAccessor
         from kts_backend.store.bot.manager import BotManager
 
-        self.game = GameAccessor(app)
+        self.admins = AdminAccessor(app)
+        self.quizzes = QuizAccessor(app)
         self.bot = BotManager(app)
 
 

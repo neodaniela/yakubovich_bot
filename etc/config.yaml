@@ -1,0 +1,30 @@
+debug: true
+
+web:
+  host: 127.0.0.1
+  port: 8000
+
+sentry:
+  dsn:
+  env: dev
+
+store: {}
+
+session:
+  key: CaY5iCkYtN7DqXdiYK1BvmGrQuaSA4Tl4bEk9my0jc0=
+
+admin:
+  email: admin@admin.com
+  password: admin
+
+database:
+  host: 0.0.0.0
+  port: 5432
+  user: kts_final
+  password: kts_final
+  database: kts_final
+
+telegram_bot:
+  token: 6197319595:AAEz5alCTy3CqBHeMfXpzWbDKOrzq_JYsWg
+  name: Якубович
+  username: leonid_yakubovich_bot
