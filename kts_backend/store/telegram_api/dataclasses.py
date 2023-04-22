@@ -8,9 +8,10 @@ from marshmallow import Schema, EXCLUDE
 @dataclass
 class MessageFrom:
     id: int
+    is_bot: bool
     first_name: str
     last_name: Optional[str]
-    username: str
+    username: Optional[str]
 
     class Meta:
         unknown = EXCLUDE
@@ -28,6 +29,14 @@ class Chat:
     class Meta:
         unknown = EXCLUDE
 
+@dataclass
+class LeftChatMember:
+    id: int
+    username: str
+
+    class Meta:
+        unknown = EXCLUDE
+
 
 @dataclass
 class Message:
@@ -35,6 +44,37 @@ class Message:
     from_: MessageFrom = field(metadata={"data_key": "from"})
     chat: Chat
     text: Optional[str] = None
+    left_chat_member: Optional["LeftChatMember"] = None
+
+    class Meta:
+        unknown = EXCLUDE
+
+
+@dataclass
+class Callback:
+    id: int
+    from_: MessageFrom = field(metadata={"data_key": "from"})
+    message: Message
+    data: str
+
+    class Meta:
+        unknown = EXCLUDE
+
+
+@dataclass
+class NewChatMember:
+    user: MessageFrom
+    status: str
+
+    class Meta:
+        unknown = EXCLUDE
+
+
+@dataclass
+class MyChatMember:
+    chat: Chat
+    from_: MessageFrom = field(metadata={"data_key": "from"})
+    new_chat_member: NewChatMember
 
     class Meta:
         unknown = EXCLUDE
@@ -43,7 +83,9 @@ class Message:
 @dataclass
 class UpdateObj:
     update_id: int
-    message: Message
+    message: Optional[Message] = None
+    callback_query: Optional[Callback] = None
+    my_chat_member: Optional[MyChatMember] = None
 
     class Meta:
         unknown = EXCLUDE
@@ -53,6 +95,7 @@ class UpdateObj:
 class GetUpdatesResponse:
     ok: bool
     result: List[UpdateObj]
+
     Schema: ClassVar[Type[Schema]] = Schema
 
     class Meta:

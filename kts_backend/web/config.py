@@ -21,6 +21,7 @@ class AdminConfig:
 @dataclass
 class BotConfig:
     token: str
+    username: str
 
 
 @dataclass
@@ -56,6 +57,9 @@ def setup_config(app: "Application", config_path: str):
             email=raw_config["admin"]["email"],
             password=raw_config["admin"]["password"],
         ),
-        bot=BotConfig(token=raw_config["telegram_bot"]["token"]),
+        bot=BotConfig(
+            token=raw_config["telegram_bot"]["token"],
+            username=raw_config["telegram_bot"]["username"],
+        ),
         database=DatabaseConfig(**raw_config["database"]),
     )
