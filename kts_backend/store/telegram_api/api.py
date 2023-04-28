@@ -35,7 +35,7 @@ class TgClient:
 
     async def send_message(
         self, chat_id: int, text: str, reply_markup=None
-    ) -> None:
+    ) -> SendMessageResponse or None:
         url = self.get_url("sendMessage")
         payload = {"chat_id": chat_id, "text": text}
         if reply_markup:
@@ -43,7 +43,10 @@ class TgClient:
 
         async with aiohttp.ClientSession() as session:
             async with session.post(url, json=payload) as resp:
-                return
+                res_dict = await resp.json()
+                if 200 <= resp.status < 300:
+                    message = SendMessageResponse.Schema().load(res_dict)
+                    return message
 
     async def delete_message(
         self, chat_id: int, message_id: int) -> None:
@@ -88,22 +91,22 @@ class TgClient:
         async with aiohttp.ClientSession() as session:
             await session.post(url, json=payload)
 
-    async def send_photo(self, chat_id: int, photo: str) -> None:
+    async def send_photo(self, chat_id: int, photo: str) -> SendMessageResponse or None:
         url = self.get_url("sendPhoto")
         payload = {"chat_id": chat_id, "photo": photo}
 
         async with aiohttp.ClientSession() as session:
             async with session.post(url, json=payload) as resp:
                 res_dict = await resp.json()
-                # return SendMessageResponse.Schema().load(res_dict)
+                return SendMessageResponse.Schema().load(res_dict)
 
     async def send_sticker(
         self, chat_id: int, sticker: str
-    ) -> None:
+    ) -> SendMessageResponse or None:
         url = self.get_url("sendSticker")
         payload = {"chat_id": chat_id, "sticker": sticker}
 
         async with aiohttp.ClientSession() as session:
             async with session.post(url, json=payload) as resp:
                 res_dict = await resp.json()
-                # return SendMessageResponse.Schema().load(res_dict)
+                return SendMessageResponse.Schema().load(res_dict)
