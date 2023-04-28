@@ -43,8 +43,7 @@ class TgClient:
 
         async with aiohttp.ClientSession() as session:
             async with session.post(url, json=payload) as resp:
-                res_dict = await resp.json()
-                # return SendMessageResponse.Schema().load(res_dict)
+                return
 
     async def delete_message(
         self, chat_id: int, message_id: int) -> None:

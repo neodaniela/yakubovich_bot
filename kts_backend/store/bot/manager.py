@@ -279,10 +279,12 @@ class BotManager(BaseAccessor):
         )
         if message:
             asyncio.create_task(self.delete_message_after_show(chat_id, message.result.message_id, 10))
-            sticker = await self.tg_client.send_sticker(
+
+        sticker = await self.tg_client.send_sticker(
                 chat_id=chat_id,
                 sticker=STICKER_ON_THE_CALL
             )
+        if sticker:
             asyncio.create_task(self.delete_message_after_show(chat_id, sticker.result.message_id, 10))
 
     async def handle_add_to_game(self, game_id: int, user_id: int, chat_id: int, username: str, first_name: str,
